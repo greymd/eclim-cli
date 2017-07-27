@@ -1,4 +1,4 @@
-__ECLI_DIR="$(dirname $0:A)"
+__ECLI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%N}}")"; pwd)"
 
 # Import commands
 source "${__ECLI_DIR}/activate.sh"
