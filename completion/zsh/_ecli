@@ -1,0 +1,67 @@
+#compdef ecli
+
+subcommands=(
+"ls: List projects."
+"ping: Confirm eclimd process."
+"vim: Open the project with vim."
+"create: Create new project."
+"delete: Delete the project."
+"open: Open the project."
+"close: Close the project."
+)
+
+function _ecli-ls ()
+{
+}
+
+function _ecli-ping ()
+{
+}
+
+function _ecli-create ()
+{
+    _alternative "dirs:directories:_dir_list"
+}
+
+function _ecli-delete ()
+{
+    __ecli-projects
+}
+
+function _ecli-vim ()
+{
+    __ecli-projects
+}
+
+function _ecli-open ()
+{
+    __ecli-projects
+}
+
+function _ecli-close ()
+{
+    __ecli-projects
+}
+
+function __ecli-projects ()
+{
+    projects=()
+    while read project ; do
+        projects=("$project" "${projects[@]}")
+    done < <(__ecli-list)
+    _describe -t projects 'projects' projects
+}
+
+function __ecli-list ()
+{
+    ecli ls | awk NF | awk '{print $1":"$3" -- "$5}'
+}
+
+function _ecli()
+{
+    if (( CURRENT==2 )) ; then
+        _describe -t subcommands 'subcommands' subcommands
+    elif (( CURRENT>2 )) ;then
+        _call_function ret _ecli-"${words[2]}"
+    fi
+}

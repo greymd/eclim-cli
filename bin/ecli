@@ -1,0 +1,96 @@
+#!/bin/bash
+
+set -u
+
+eclim-ls () {
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectList(1) | redir END" -scq! | awk NF
+}
+
+eclim-vim () {
+  local _prj="${1}"
+  if [[ -z "$_prj" ]]; then
+    echo "Project name is required" >&2
+    exit 1
+  fi
+  vim -u "$HOME/.vimrc" "$(eclim-ls | grep -E "^$_prj" | head -n 1 | awk '{$1="";$2="";$3="";$4="";print $0}' | awk '$1=$1')"
+}
+
+eclim-ping () {
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :PingEclim | redir END" -scq! | awk NF
+}
+
+eclim-project-close () {
+  local _def=$(basename "$PWD")
+  local _prj="${1:-$_def}"
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectClose('$_prj') | redir END" -scq! | awk NF
+}
+
+eclim-project-open () {
+  local _def=$(basename "$PWD")
+  local _prj="${1:-$_def}"
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectOpen('$_prj') | redir END" -scq! | awk NF
+}
+
+# Project Delete
+eclim-project-delete () {
+  local _def=$(basename "$PWD")
+  local _prj="${1:-$_def}"
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectDelete('$_prj') | redir END" -scq! | awk NF
+}
+
+# Project Create
+eclim-project-create () {
+  local _def="../$(basename "$PWD")/"
+  local _prj="${1:-$_def}"
+  vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectCreate('$_prj -n java') | redir END" -scq! | awk NF
+}
+
+usage () {
+  cat <<__EOF__
+Usage:
+  ecli [COMMANDS] [argument ...]
+
+COMMANDS:
+  ls                 -- List projects.
+  ping               -- Confirm eclimd process.
+  vim    [<project>] -- Open the project with vim.
+  create [<project>] -- Create new project.
+  delete [<project>] -- Delete the project.
+  open   [<project>] -- Open the project.
+  close  [<project>] -- Close the project.
+__EOF__
+}
+
+
+_cmd="${1}"
+shift
+case "$_cmd" in
+  ls)
+    eclim-ls
+    ;;
+  ping)
+    eclim-ping "$@"
+    ;;
+  vim)
+    eclim-vim "$@"
+    ;;
+  create)
+    eclim-create "$@"
+    ;;
+  delete)
+    eclim-delete "$@"
+    ;;
+  open)
+    eclim-open "$@"
+    ;;
+  close)
+    eclim-close "$@"
+    ;;
+  --help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage
+    exit 1
+esac
