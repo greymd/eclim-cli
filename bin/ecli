@@ -75,16 +75,16 @@ case "$_cmd" in
     eclim-vim "$@"
     ;;
   create)
-    eclim-create "$@"
+    eclim-project-create "$@"
     ;;
   delete)
-    eclim-delete "$@"
+    eclim-project-delete "$@"
     ;;
   open)
-    eclim-open "$@"
+    eclim-project-open "$@"
     ;;
   close)
-    eclim-close "$@"
+    eclim-project-close "$@"
     ;;
   --help)
     usage
