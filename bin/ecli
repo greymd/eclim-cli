@@ -2,17 +2,42 @@
 
 set -u
 
+# -----------------------------
+# Check operating system and set eclips path
+# -----------------------------
+unamestr=$(uname | grep -oiE '(Darwin|CYGWIN|Linux)')
+if [[ $unamestr == 'Darwin' ]]; then
+  ECLIPSE_HOME=${ECLIPSE_HOME:-/Applications/Eclipse.app/Contents/Eclipse}
+elif [[ $unamestr == 'Linux' ]]; then
+  ECLIPSE_HOME=${ECLIPSE_HOME:-$HOME/eclipse}
+fi
+
 eclim-ls () {
   vim -u "$HOME/.vimrc" -e +"redir>>/dev/stdout | :call eclim#project#util#ProjectList(1) | redir END" -scq! | awk NF
 }
 
-eclim-vim () {
+eclim-start () {
+  $ECLIPSE_HOME/eclimd -b &> /dev/null
+}
+
+eclim-stop () {
+  $ECLIPSE_HOME/eclim -command shutdown
+}
+
+eclim-status () {
+  local _eclimps="org.eclim.applicatio[n]"
+  ps alx | grep -qE "$_eclimps" && echo "eclim is running ("$(ps ax -o pid,command | grep -E "$_eclimps" | awk "{print \$1}")")" || echo "eclim is not unning"
+}
+
+eclim-edit () {
   local _prj="${1}"
   if [[ -z "$_prj" ]]; then
     echo "Project name is required" >&2
     exit 1
   fi
-  vim -u "$HOME/.vimrc" "$(eclim-ls | grep -E "^$_prj" | head -n 1 | awk '{$1="";$2="";$3="";$4="";print $0}' | awk '$1=$1')"
+  local _dir="$(eclim-ls | grep -E "^$_prj" | head -n 1 | awk '{$1="";$2="";$3="";$4="";print $0}' | awk '$1=$1')"
+  cd "$_dir"
+  vim -u "$HOME/.vimrc" "$_dir"
 }
 
 eclim-ping () {
@@ -51,8 +76,11 @@ Usage:
   ecli [COMMANDS] [argument ...]
 
 COMMANDS:
+  start              -- Start eclimd process.
+  stop               -- Stop eclimd process.
+  status             -- Check eclimd process status.
   ls                 -- List projects.
-  ping               -- Confirm eclimd process.
+  ping               -- Check version of eclimd process.
   vim    [<project>] -- Open the project with vim.
   create [<project>] -- Create new project.
   delete [<project>] -- Delete the project.
@@ -62,9 +90,18 @@ __EOF__
 }
 
 
-_cmd="${1}"
+_cmd="${1-}"
 shift
 case "$_cmd" in
+  start)
+    eclim-start
+    ;;
+  stop)
+    eclim-stop
+    ;;
+  status)
+    eclim-status
+    ;;
   ls)
     eclim-ls
     ;;
@@ -72,7 +109,7 @@ case "$_cmd" in
     eclim-ping "$@"
     ;;
   vim)
-    eclim-vim "$@"
+    eclim-edit "$@"
     ;;
   create)
     eclim-project-create "$@"
