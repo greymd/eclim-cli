@@ -58,7 +58,7 @@ COMMANDS:
   status             -- Check eclimd process status.
   ls                 -- List projects.
   ping               -- Check version of eclimd process.
-  vim    [<project>] -- Open the project with vim.
+  edit   [<project>] -- Open the project with vim.
   create [<project>] -- Create new project.
   delete [<project>] -- Delete the project.
   open   [<project>] -- Open the project.
