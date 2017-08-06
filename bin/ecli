@@ -76,11 +76,12 @@ Usage:
   ecli [COMMANDS] [argument ...]
 
 COMMANDS:
+  help               -- Show this help.
   start              -- Start eclimd process.
   stop               -- Stop eclimd process.
-  status             -- Check eclimd process status.
+  restart            -- Restart eclimd process.
   ls                 -- List projects.
-  ping               -- Check version of eclimd process.
+  ping               -- Check eclimd's process status and version.
   edit   [<project>] -- Open the project with vim.
   create [<project>] -- Create new project.
   delete [<project>] -- Delete the project.
@@ -99,13 +100,15 @@ case "$_cmd" in
   stop)
     eclim-stop
     ;;
-  status)
-    eclim-status
+  restart)
+    eclim-stop
+    eclim-start
     ;;
   ls)
     eclim-ls
     ;;
   ping)
+    eclim-status
     eclim-ping "$@"
     ;;
   edit)
@@ -123,7 +126,7 @@ case "$_cmd" in
   close)
     eclim-project-close "$@"
     ;;
-  --help)
+  --help|help)
     usage
     exit 0
     ;;

@@ -1,17 +1,22 @@
 #compdef ecli
 
 subcommands=(
+"help: Show this help."
 "start: Start eclimd process."
 "stop: Stop eclimd process."
-"status: Check eclimd process status."
+"restart: Restart eclimd process."
 "ls: List projects."
-"ping: Confirm eclimd process."
+"ping: Check eclimd's process status and version."
 "edit: Open the project with vim."
 "create: Create new project."
 "delete: Delete the project."
 "open: Open the project."
 "close: Close the project."
 )
+
+function _ecli-help ()
+{
+}
 
 function _ecli-start ()
 {
@@ -21,7 +26,7 @@ function _ecli-stop ()
 {
 }
 
-function _ecli-status ()
+function _ecli-restart ()
 {
 }
 
