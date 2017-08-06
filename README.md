@@ -48,16 +48,17 @@ Usage
 `ecli` command is available.
 
 ```
-$ ecli
+$ ecli help
 Usage:
   ecli [COMMANDS] [argument ...]
 
 COMMANDS:
+  help               -- Show this help.
   start              -- Start eclimd process.
   stop               -- Stop eclimd process.
-  status             -- Check eclimd process status.
+  restart            -- Restart eclimd process.
   ls                 -- List projects.
-  ping               -- Check version of eclimd process.
+  ping               -- Check eclimd's process status and version.
   edit   [<project>] -- Open the project with vim.
   create [<project>] -- Create new project.
   delete [<project>] -- Delete the project.
