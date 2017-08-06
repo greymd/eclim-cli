@@ -39,7 +39,7 @@ Add this line to your `~/.zshrc` or `~/.bashrc`.
 
 ```
 export ECLIPSE_HOME=$HOME/eclipse
-# $HOME/eclipse/eclimd must be exist.
+# $HOME/eclipse/eclimd must exist.
 ```
 
 Usage
