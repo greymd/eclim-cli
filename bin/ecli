@@ -17,7 +17,7 @@ eclim-ls () {
 }
 
 eclim-start () {
-  $ECLIPSE_HOME/eclimd -b &> /dev/null
+  $ECLIPSE_HOME/eclimd -b ${@-} &> /dev/null
 }
 
 eclim-stop () {
